@@ -80,7 +80,7 @@ describe('trainConfig', () => {
             START_DATE: '2020041500',
             END_DATE: '2020041700',
           },
-          command: ['/opt/tiger/fedlearner_byted/deploy/scripts/trainer/run_customed_trainer_master.sh'],
+          command: ['/deploy/scripts/trainer/run_customed_trainer_master.sh'],
           args: [],
         },
         ps_config: {
@@ -96,7 +96,7 @@ describe('trainConfig', () => {
           replicas: 1,
           image: 'image_path',
           env: {},
-          command: ['/opt/tiger/fedlearner_byted/deploy/scripts/trainer/run_trainer_ps.sh'],
+          command: ['/deploy/scripts/trainer/run_trainer_ps.sh'],
           args: [],
         },
         worker_config: {
@@ -116,8 +116,8 @@ describe('trainConfig', () => {
           replicas: 1,
           image: 'image_path',
           env: {},
-          command: ['/opt/tiger/fedlearner_byted/deploy/scripts/wait4pair_wrapper.sh'],
-          args: ['/opt/tiger/fedlearner_byted/deploy/scripts/trainer/run_trainer_worker.sh'],
+          command: ['/deploy/scripts/wait4pair_wrapper.sh'],
+          args: ['/deploy/scripts/trainer/run_trainer_worker.sh'],
         },
       }),
       loadYaml(testTrainYaml),
