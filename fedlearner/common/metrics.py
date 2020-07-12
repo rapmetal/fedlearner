@@ -27,6 +27,7 @@ if thread:
     _lock = threading.RLock()
 else:
     _lock = None
+from functools import wraps
 
 _metrics_client = None
 
@@ -75,7 +76,7 @@ class loggingHandler(Handler):
 
 class elasticSearchHandler(Handler):
     def __init__(self, ip, port):
-        from elasticsearch import Elasticsearch # pylint: disable=C0415
+        from elasticsearch import Elasticsearch  # pylint: disable=C0415
         super(elasticSearchHandler, self).__init__('elasticsearch')
         self._es = Elasticsearch([ip], port=port)
         # initialize index for elastic search
@@ -169,3 +170,18 @@ def emit_timer(name, value, tags=None):
     if not _metrics_client:
         initialize_metrics()
     _metrics_client.emit(name, value, tags, 'timer')
+
+
+def timer(func_name, tags={}):
+    def func_wrapper(func):
+        @wraps(func)
+        def return_wrapper(*args, **kwargs):
+            time_start = time.time()
+
+            result = func(*args, **kwargs)
+            time_end = time.time()
+            time_spend = time_end - time_start
+            emit_timer(func_name, time_spend, tags)
+            return result
+        return return_wrapper
+    return func_wrapper

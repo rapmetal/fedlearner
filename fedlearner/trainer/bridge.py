@@ -34,7 +34,7 @@ from fedlearner.common import common_pb2 as common_pb
 from fedlearner.common import trainer_worker_service_pb2 as tws_pb
 from fedlearner.common import trainer_worker_service_pb2_grpc as tws_grpc
 from fedlearner.proxy.channel import make_insecure_channel, ChannelType
-
+from fedlearner.common import metrics
 
 def make_ready_client(channel, stop_event=None):
     channel_ready = grpc.channel_ready_future(channel)
@@ -306,6 +306,7 @@ class Bridge(object):
             return tws_pb.TrainerWorkerResponse(
                 next_seq_num=self._next_receive_seq_num)
 
+    @metrics.timer("data_block")
     def _data_block_handler(self, request):
         assert self._connected, "Cannot load data before connect"
         if not self._data_block_handler_fn:
